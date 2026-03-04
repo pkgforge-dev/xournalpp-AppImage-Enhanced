@@ -10,9 +10,14 @@ pacman -Syu --noconfirm xournalpp
 
 echo "Installing debloated packages..."
 echo "---------------------------------------------------------------"
-                                       # this app depends on broadway symbols
-                                       # so gtk3-mini is not possible
-get-debloated-pkgs --add-common --prefer-nano ! gtk3-mini
+get-debloated-pkgs --add-common --prefer-nano
+
+# gtk3-mini breaks xornalpp because it lacks symbol gdk_broadway_display_get_type
+# lets provide a dummy instead
+echo 'unsigned long gdk_broadway_display_get_type(void) { return 0UL; }' > ./kek.c
+gcc -shared -fPIC -o kek.so kek.c
+cp -v ./kek.so /usr/lib
+patchelf --add-needed kek.so /usr/bin/xournalpp /usr/bin/xournalpp-wrapper
 
 # Comment this out if you need an AUR package
 #make-aur-package PACKAGENAME
