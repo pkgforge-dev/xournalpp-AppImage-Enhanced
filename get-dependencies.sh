@@ -10,7 +10,9 @@ pacman -Syu --noconfirm xournalpp
 
 echo "Installing debloated packages..."
 echo "---------------------------------------------------------------"
-get-debloated-pkgs --add-common --prefer-nano
+                                       # this app depends on broadway symbols
+                                       # so gtk3-mini is not possible
+get-debloated-pkgs --add-common --prefer-nano ! gtk3-mini
 
 # Comment this out if you need an AUR package
 #make-aur-package PACKAGENAME
